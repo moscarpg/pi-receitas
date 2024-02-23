@@ -14,7 +14,7 @@ import {
     Montserrat_400Regular
 } from '@expo-google-fonts/montserrat';
 
-export default function Inicial() {
+export default function Inicial({ navigation }) {
 
     let [fontsLoaded, fontError] = useFonts({
         Lemon_400Regular,
@@ -35,12 +35,12 @@ export default function Inicial() {
             </View>
             <Image style={estilos.logoProjeto} source={logo_projeto} />
             <Image style={estilos.lateralEsquerda} source={lateral_esquerda} />
-            <TouchableOpacity style={estilos.botao}>
+            <TouchableOpacity style={estilos.botao} onPress={() => navigation.navigate('CatalogoCursos')}>
                 <Text style={estilos.textoBotao}>
                     Ver receitas
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={estilos.entrarProfessor}>
+            <TouchableOpacity style={estilos.entrarProfessor} onPress={() => navigation.navigate('Logar')}>
                 <Text style={estilos.eProfessor}>
                     É professor do Senac? <Text style={estilos.botaoLogin}>Entre com a sua senha</Text>
                 </Text>
