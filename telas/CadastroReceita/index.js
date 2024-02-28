@@ -8,6 +8,10 @@ import {
     Image,
 } from 'react-native';
 
+import { useState } from 'react';
+import { db } from '../../firebaseConfig';
+import { collection, addDoc } from "firebase/firestore";
+
 import {
     useFonts,
     Montserrat_900Black,
@@ -15,10 +19,19 @@ import {
     Montserrat_700Bold,
 } from '@expo-google-fonts/montserrat';
 
-import logoMenu from '../../assets/Group 1.png';
-import pesquisa from '../../assets/Group 2.png';
-
 export default function App() {
+    const [nome, setNome] = useState('')
+    async function adicionar() {
+        try {
+            const docRef = await addDoc(collection(db, "receitas"), {
+                nome: nome
+            });
+            console.warn("Document written with ID: ", docRef.id);
+        } catch (e) {
+            console.warn("Error adding document: ", e);
+        }
+    }
+
     let [fontsLoaded, fontError] = useFonts({
         Montserrat_700Bold,
         Montserrat_900Black,
@@ -30,29 +43,27 @@ export default function App() {
     }
     return (
         <SafeAreaView style={estilos.bigContent}>
-            <View style={estilos.topoMenus}>
-                <TouchableOpacity>
-                    <Image source={logoMenu} />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <Image source={pesquisa} />
-                </TouchableOpacity>
-            </View>
             <Text style={estilos.titulo}>Cadastre uma receita</Text>
             <View style={estilos.smallContent}>
                 <View style={estilos.labelInput}>
                     <Text style={estilos.label}>Nome da receita:</Text>
                     <TextInput
                         style={[estilos.tamanhoElementos, estilos.input]}
+                        value={nome}
+                        onChangeText={(e) => setNome(e)}
                         placeholder="Empadão"
                         placeholderTextColor='#c9c9c9'
                     />
                 </View>
                 <TouchableOpacity style={[estilos.tamanhoElementos, estilos.botoes]}>
-                    Selecione uma imagem
+                    <Text>
+                        Selecione uma imagem
+                    </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[estilos.tamanhoElementos, estilos.botoes]}>
-                    Confirmar
+                <TouchableOpacity onPress={adicionar} style={[estilos.tamanhoElementos, estilos.botoes]}>
+                    <Text>
+                        Confirmar
+                    </Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -60,15 +71,9 @@ export default function App() {
 }
 
 const estilos = StyleSheet.create({
-    topoMenus: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        gap: 258,
-        marginTop: 31,
-        marginBottom: 40,
-    },
     bigContent: {
         alignItems: 'center',
+        marginTop: 50,
     },
     titulo: {
         fontSize: 20,

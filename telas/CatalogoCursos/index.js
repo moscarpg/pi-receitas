@@ -43,27 +43,27 @@ export default function App({ navigation }) {
                 <Text style={estilos.titulo}>Catálogo de cursos</Text>
                 <Text style={estilos.subTitulo}>Selecione um de nossos cursos para que você possa ver as nosssas receitas!</Text>
                 <View style={estilos.conteudoGrande}>
-                    <TouchableOpacity onPress={() => navigation.navigate('CatalogoReceitas', cursos.salgadeiro)} style={estilos.card}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Catalogo de receitas', cursos.salgadeiro)} style={estilos.card}>
                         <Image style={estilos.imagem} source={cursos.salgadeiro.imagem} />
                         <Text style={estilos.textoCard}>Salgadeiro</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate('CatalogoReceitas', cursos.bolosTortas)} style={estilos.card}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Catalogo de receitas', cursos.bolosTortas)} style={estilos.card}>
                         <Image style={estilos.imagem} source={cursos.bolosTortas.imagem} />
                         <Text style={estilos.textoCard}>Bolos e tortas</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate('CatalogoReceitas', cursos.preparoCoqueteis)} style={estilos.card}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Catalogo de receitas', cursos.preparoCoqueteis)} style={estilos.card}>
                         <Image style={estilos.imagem} source={cursos.preparoCoqueteis.imagem} />
                         <Text style={estilos.textoCard}>Preparo de coqueteis</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate('CatalogoReceitas', cursos.tecnicoGastronomia)} style={estilos.card}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Catalogo de receitas', cursos.tecnicoGastronomia)} style={estilos.card}>
                         <Image style={estilos.imagem} source={cursos.tecnicoGastronomia.imagem} />
                         <Text style={estilos.textoCard}>Técnico em gastronomia</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate('CatalogoReceitas', cursos.doceiro)} style={estilos.card}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Catalogo de receitas', cursos.doceiro)} style={estilos.card}>
                         <Image style={estilos.imagem} source={cursos.doceiro.imagem} />
                         <Text style={estilos.textoCard}>Doceiro</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate('CatalogoReceitas', cursos.marmitasSaudaveis)} style={estilos.card}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Catalogo de receitas', cursos.marmitasSaudaveis)} style={estilos.card}>
                         <Image style={estilos.imagem} source={cursos.marmitasSaudaveis.imagem} />
                         <Text style={estilos.textoCard}>Marmitas saudáveis</Text>
                     </TouchableOpacity>
