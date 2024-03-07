@@ -5,9 +5,9 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
+    FlatList,
+    SafeAreaView
 } from 'react-native';
-
-import cursos from '../../mocks/cursos';
 
 import logoMenu from '../../assets/Group 1.png';
 import pesquisa from '../../assets/Group 2.png';
@@ -19,7 +19,41 @@ import {
     Montserrat_700Bold,
 } from '@expo-google-fonts/montserrat';
 
+import { collection, query, getDocs } from "firebase/firestore";
+import { db } from '../../firebaseConfig';
+
+import { useState, useEffect } from 'react';
+
 export default function App({ navigation }) {
+    const [cursos, setCursos] = useState(null)
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            const recuperandoDados = async () => {
+                const lista = []
+                const docRef = query(collection(db, "cursos"));
+                const querySnapshot = await getDocs(docRef);
+                querySnapshot.forEach((doc) => {
+                    atual = doc.data();
+                    atual['id'] = doc.id;
+                    lista.push(atual)
+                });
+                setCursos(lista);
+            }
+            recuperandoDados();
+        });
+
+        // Return the function to unsubscribe from the event so it gets removed on unmount
+        return unsubscribe;
+    }, [navigation])
+
+
+
+    // useEffect(() => {
+    //     recuperandoDados();
+    //     console.log(cursos)
+    // }, [])
+
     let [fontsLoaded, fontError] = useFonts({
         Montserrat_700Bold,
         Montserrat_900Black,
@@ -29,61 +63,32 @@ export default function App({ navigation }) {
     if (!fontsLoaded && !fontError) {
         return null;
     }
+
     return (
-        <ScrollView>
-            <View style={estilos.bigContent}>
-                <View style={estilos.topoMenus}>
-                    <TouchableOpacity>
-                        <Image source={logoMenu} />
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Image source={pesquisa} />
-                    </TouchableOpacity>
+        <FlatList
+            ListHeaderComponent={() => (
+                <View style={{marginBottom: 40,}}>
+                    <Text style={estilos.titulo}>Catálogo de cursos</Text>
+                    <Text style={estilos.subTitulo}>Selecione um de nossos cursos para que você possa ver as nosssas receitas!</Text>
                 </View>
-                <Text style={estilos.titulo}>Catálogo de cursos</Text>
-                <Text style={estilos.subTitulo}>Selecione um de nossos cursos para que você possa ver as nosssas receitas!</Text>
-                <View style={estilos.conteudoGrande}>
-                    <TouchableOpacity onPress={() => navigation.navigate('Catalogo de receitas', cursos.salgadeiro)} style={estilos.card}>
-                        <Image style={estilos.imagem} source={cursos.salgadeiro.imagem} />
-                        <Text style={estilos.textoCard}>Salgadeiro</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate('Catalogo de receitas', cursos.bolosTortas)} style={estilos.card}>
-                        <Image style={estilos.imagem} source={cursos.bolosTortas.imagem} />
-                        <Text style={estilos.textoCard}>Bolos e tortas</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate('Catalogo de receitas', cursos.preparoCoqueteis)} style={estilos.card}>
-                        <Image style={estilos.imagem} source={cursos.preparoCoqueteis.imagem} />
-                        <Text style={estilos.textoCard}>Preparo de coqueteis</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate('Catalogo de receitas', cursos.tecnicoGastronomia)} style={estilos.card}>
-                        <Image style={estilos.imagem} source={cursos.tecnicoGastronomia.imagem} />
-                        <Text style={estilos.textoCard}>Técnico em gastronomia</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate('Catalogo de receitas', cursos.doceiro)} style={estilos.card}>
-                        <Image style={estilos.imagem} source={cursos.doceiro.imagem} />
-                        <Text style={estilos.textoCard}>Doceiro</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate('Catalogo de receitas', cursos.marmitasSaudaveis)} style={estilos.card}>
-                        <Image style={estilos.imagem} source={cursos.marmitasSaudaveis.imagem} />
-                        <Text style={estilos.textoCard}>Marmitas saudáveis</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </ScrollView>
+            )}
+            showsVerticalScrollIndicator={false}
+            style={estilos.conteudoGrande}
+            numColumns={2}
+            columnWrapperStyle={estilos.teste}
+            data={cursos}
+            renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => navigation.navigate('Catalogo de receitas', item)} style={estilos.card}>
+                    <Image style={estilos.imagem} source={{ uri: item.imagem }} />
+                    <Text style={estilos.textoCard}>{item.nome}</Text>
+                </TouchableOpacity>
+            )}
+        />
+
     );
 }
 
 const estilos = StyleSheet.create({
-    topoMenus: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        gap: 258,
-        marginTop: 31,
-        marginBottom: 40,
-    },
-    bigContent: {
-        alignItems: 'center',
-    },
     titulo: {
         fontSize: 20,
         color: '#005594',
@@ -101,29 +106,36 @@ const estilos = StyleSheet.create({
         color: '#005594',
     },
     conteudoGrande: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: 51,
-        justifyContent: 'center',
-        marginTop: 57,
+        paddingVertical: 40,
+        paddingHorizontal: 'auto',
+        alignSelf: 'center'
     },
     card: {
         backgroundColor: '#fff',
         paddingHorizontal: 13,
         paddingBottom: 60,
         borderRadius: 24,
-        maxHeight: 136,
-        shadowColor: '#F78B1F',
+        height: 136,
+        shadowColor: "#000",
         shadowOffset: {
             width: 0,
             height: 4,
         },
         shadowOpacity: 0.25,
-        shadowRadius: 70,
+        shadowRadius: 10.00,
+        elevation: 7,
+        marginTop: 10,
+        marginHorizontal: 10,
         gap: 8,
+        alignSelf: 'center'
     },
     imagem: {
         marginTop: -10,
+        width: 76,
+        height: 76,
+        borderRadius: 256,
+        borderWidth: 1,
+        borderColor: '#005594'
     },
     textoCard: {
         maxWidth: 78,
@@ -131,5 +143,10 @@ const estilos = StyleSheet.create({
         fontSize: 10,
         fontFamily: 'Montserrat_600SemiBold',
         color: '#005594',
+    },
+    teste: {
+        flexWrap: 'wrap',
+        marginBottom: 44,
+        gap: 51,
     },
 });

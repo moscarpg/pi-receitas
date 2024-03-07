@@ -35,7 +35,7 @@ export default function Inicial({ navigation }) {
             </View>
             <Image style={estilos.logoProjeto} source={logo_projeto} />
             <Image style={estilos.lateralEsquerda} source={lateral_esquerda} />
-            <TouchableOpacity style={estilos.botao} onPress={() => navigation.navigate('CatalogoCursos')}>
+            <TouchableOpacity style={estilos.botao} onPress={() => navigation.navigate('Catalogo de cursos')}>
                 <Text style={estilos.textoBotao}>
                     Ver receitas
                 </Text>
