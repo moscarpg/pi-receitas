@@ -21,12 +21,14 @@ import {
     Montserrat_600SemiBold,
     Montserrat_700Bold,
 } from '@expo-google-fonts/montserrat';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const storage = getStorage();
 
 export default function App() {
 
     const [nome, setNome] = useState('')
+    const [descricao, setDescricao] = useState('')
     const [curso, setCurso] = useState(null)
     const [cursos, setCursos] = useState(null)
     const [image, setImage] = useState(null);
@@ -74,10 +76,12 @@ export default function App() {
                 try {
                     const docRef = await addDoc(collection(db, "receitas"), {
                         nome: nome,
+                        descricao: descricao,
                         curso: curso,
                         imagem: url
                     });
                     setNome('')
+                    setDescricao('')
                     setImage(null)
                     console.log("Document written with ID: ", docRef.id);
                 } catch (e) {
@@ -104,40 +108,50 @@ export default function App() {
         return null;
     }
     return (
-        <SafeAreaView style={estilos.bigContent}>
-            <Text style={estilos.titulo}>Cadastre uma receita</Text>
-            <View style={estilos.smallContent}>
-                <View style={estilos.labelInput}>
-                    <Text style={estilos.label}>Nome da receita:</Text>
-                    <TextInput
-                        style={[estilos.tamanhoElementos, estilos.input]}
-                        value={nome}
-                        onChangeText={(e) => setNome(e)}
-                        placeholder="Empadão"
-                        placeholderTextColor='#c9c9c9'
-                    />
+        <ScrollView style={{ height: '100%' }} showsVerticalScrollIndicator={false}>
+            <View style={estilos.bigContent}> 
+                <Text style={estilos.titulo}>Cadastre uma receita</Text>
+                <View style={estilos.smallContent}>
+                    <View style={estilos.labelInput}>
+                        <Text style={estilos.label}>Nome da receita:</Text>
+                        <TextInput
+                            style={[estilos.tamanhoElementos, estilos.input]}
+                            value={nome}
+                            onChangeText={(e) => setNome(e)}
+                            placeholder="Empadão"
+                            placeholderTextColor='#c9c9c9'
+                        />
+                        <Text style={estilos.label}>Subtítulo:</Text>
+                        <TextInput
+                            style={[estilos.tamanhoElementos, estilos.input]}
+                            value={descricao}
+                            onChangeText={(e) => setDescricao(e)}
+                            placeholder="Subtítulo"
+                            placeholderTextColor='#c9c9c9'
+                        />
+                    </View>
+                    <Picker
+                        selectedValue={curso}
+                        onValueChange={(itemValue, itemIndex) => setCurso(itemValue)}
+                    >
+                        {cursos ? cursos.map((curso, index) => (
+                            <Picker.Item key={index} label={curso.nome} value={curso.id} />
+                        )) : null}
+                    </Picker>
+                    <TouchableOpacity onPress={pickImage} style={[estilos.tamanhoElementos, estilos.botoes]}>
+                        <Text style={estilos.textoBotoes}>
+                            Selecione uma imagem
+                        </Text>
+                    </TouchableOpacity>
+                    {image ? <Image source={{ uri: image }} style={{ width: 150, height: 150, alignSelf: 'center', borderRadius: 356, borderWidth: 1, borderColor: '#005594' }} /> : null}
+                    <TouchableOpacity onPress={adicionar} style={[estilos.tamanhoElementos, estilos.botoes]}>
+                        <Text style={estilos.textoBotoes}>
+                            Confirmar
+                        </Text>
+                    </TouchableOpacity>
                 </View>
-                <Picker
-                    selectedValue={curso}
-                    onValueChange={(itemValue, itemIndex) => setCurso(itemValue)}
-                >
-                    {cursos ? cursos.map((curso) => (
-                        <Picker.Item label={curso.nome} value={curso.id} />
-                    )) : null}
-                </Picker>
-                <TouchableOpacity onPress={pickImage} style={[estilos.tamanhoElementos, estilos.botoes]}>
-                    <Text style={estilos.textoBotoes}>
-                        Selecione uma imagem
-                    </Text>
-                </TouchableOpacity>
-                {image ? <Image source={{ uri: image }} style={{ width: 150, height: 150, alignSelf: 'center', borderRadius: 356, borderWidth: 1, borderColor: '#005594' }} /> : null}
-                <TouchableOpacity onPress={adicionar} style={[estilos.tamanhoElementos, estilos.botoes]}>
-                    <Text style={estilos.textoBotoes}>
-                        Confirmar
-                    </Text>
-                </TouchableOpacity>
             </View>
-        </SafeAreaView>
+        </ScrollView>
     );
 }
 

@@ -1,16 +1,11 @@
 import {
-    SafeAreaView,
-    View,
     Image,
     StyleSheet,
     Text,
     TouchableOpacity,
     FlatList,
+    View
 } from 'react-native';
-
-import receita from '../../assets/receitas/image 2.png';
-import logoMenu from '../../assets/Group 1.png';
-import pesquisa from '../../assets/Group 2.png';
 
 import {
     useFonts,
@@ -51,9 +46,6 @@ export default function App({ route, navigation }) {
         return unsubscribe;
     }, [navigation])
 
-
-
-
     let [fontsLoaded, fontError] = useFonts({
         Montserrat_700Bold,
         Montserrat_900Black,
@@ -63,31 +55,31 @@ export default function App({ route, navigation }) {
     if (!fontsLoaded && !fontError) {
         return null;
     }
+
     return (
-        <SafeAreaView style={estilos.bigContent}>
-            <Text style={estilos.titulo}>{nome}</Text>
-            {nome != 'Todas as receitas' ? <Text style={estilos.subTitulo}>Receitas deliciosas do nosso curso de {nome}</Text> : null}
-            {receitas ? <FlatList
-                style={estilos.conteudoGrande}
-                numColumns={2}
-                columnWrapperStyle={estilos.teste}
-                data={receitas}
-                renderItem={({ item }) => (
-                    <TouchableOpacity onPress={() => { navigation.navigate('Receita') }} style={estilos.card}>
-                        <Image style={estilos.imagem} source={{ uri: item.imagem }} />
-                        <Text style={estilos.textoCard}>{item.nome}</Text>
-                    </TouchableOpacity>
-                )}
-            /> : <Text>Nenhuma receita encontrada</Text>}
-        </SafeAreaView>
+        <FlatList
+            ListHeaderComponent={() => (
+                <View style={{ marginBottom: 40, }}>
+                    <Text style={estilos.titulo}>{nome}</Text>
+                    {nome != 'Todas as receitas' ? <Text style={estilos.subTitulo}>Receitas deliciosas do nosso curso de {nome}</Text> : <Text style={estilos.subTitulo}>Todas as nossas deliciosas receitas</Text>}
+                </View>
+            )}
+            showsVerticalScrollIndicator={false}
+            style={estilos.conteudoGrande}
+            numColumns={2}
+            columnWrapperStyle={estilos.teste}
+            data={receitas}
+            renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => navigation.navigate('Receita', item)} style={estilos.card}>
+                    <Image style={estilos.imagem} source={{ uri: item.imagem }} />
+                    <Text style={estilos.textoCard}>{item.nome}</Text>
+                </TouchableOpacity>
+            )}
+        />
     );
 }
 
 const estilos = StyleSheet.create({
-    bigContent: {
-        alignItems: 'center',
-        marginTop: 50,
-    },
     titulo: {
         fontSize: 20,
         color: '#005594',
@@ -105,7 +97,9 @@ const estilos = StyleSheet.create({
         color: '#005594',
     },
     conteudoGrande: {
-        marginVertical: 40,
+        paddingVertical: 40,
+        paddingHorizontal: 'auto',
+        alignSelf: 'center'
     },
     card: {
         backgroundColor: '#fff',
@@ -124,6 +118,7 @@ const estilos = StyleSheet.create({
         marginTop: 10,
         marginHorizontal: 10,
         gap: 8,
+        alignSelf: 'center'
     },
     imagem: {
         marginTop: -10,

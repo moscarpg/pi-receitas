@@ -1,12 +1,10 @@
 import {
-    ScrollView,
     View,
     Image,
     StyleSheet,
     Text,
     TouchableOpacity,
     FlatList,
-    SafeAreaView
 } from 'react-native';
 
 import logoMenu from '../../assets/Group 1.png';
@@ -67,7 +65,7 @@ export default function App({ navigation }) {
     return (
         <FlatList
             ListHeaderComponent={() => (
-                <View style={{marginBottom: 40,}}>
+                <View style={{ marginBottom: 40, }}>
                     <Text style={estilos.titulo}>Catálogo de cursos</Text>
                     <Text style={estilos.subTitulo}>Selecione um de nossos cursos para que você possa ver as nosssas receitas!</Text>
                 </View>
