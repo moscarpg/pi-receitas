@@ -1,4 +1,5 @@
 import { Text, ScrollView, Image, StyleSheet, View, TouchableOpacity } from "react-native";
+import { auth } from "../../firebaseConfig";
 import logo_projeto from '../../assets/inicial/logo_projeto.png'
 import logo_senac from '../../assets/inicial/logo_senac.png'
 import lateral_esquerda from '../../assets/inicial/lateral_esquerda.png'

@@ -1,14 +1,11 @@
 import {
-    View,
     Image,
     StyleSheet,
     Text,
     TouchableOpacity,
     FlatList,
+    View
 } from 'react-native';
-
-import logoMenu from '../../assets/Group 1.png';
-import pesquisa from '../../assets/Group 2.png';
 
 import {
     useFonts,
@@ -17,26 +14,27 @@ import {
     Montserrat_700Bold,
 } from '@expo-google-fonts/montserrat';
 
-import { collection, query, getDocs } from "firebase/firestore";
+import { collection, query, getDocs, where } from "firebase/firestore";
 import { db } from '../../firebaseConfig';
 
 import { useState, useCallback } from 'react';
 
 import { useFocusEffect } from '@react-navigation/native';
 
-export default function App({ navigation }) {
-    const [cursos, setCursos] = useState(null)
+
+export default function App({ route, navigation }) {
+    const [receitas, setReceitas] = useState(null)
 
     const recuperandoDados = async () => {
         const lista = []
-        const docRef = query(collection(db, "cursos"));
+        const docRef = query(collection(db, "receitas"))
         const querySnapshot = await getDocs(docRef);
         querySnapshot.forEach((doc) => {
             atual = doc.data();
             atual['id'] = doc.id;
             lista.push(atual)
         });
-        setCursos(lista);
+        setReceitas(lista);
     }
 
     useFocusEffect(
@@ -62,23 +60,22 @@ export default function App({ navigation }) {
         <FlatList
             ListHeaderComponent={() => (
                 <View style={{ marginBottom: 40, }}>
-                    <Text style={estilos.titulo}>Catálogo de cursos</Text>
-                    <Text style={estilos.subTitulo}>Selecione um de nossos cursos para que você possa ver as nosssas receitas!</Text>
+                    <Text style={estilos.titulo}>Todas as receitas</Text>
+                    <Text style={estilos.subTitulo}>Todas as nossas deliciosas receitas</Text>
                 </View>
             )}
             showsVerticalScrollIndicator={false}
             style={estilos.conteudoGrande}
             numColumns={2}
             columnWrapperStyle={estilos.teste}
-            data={cursos}
+            data={receitas}
             renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => navigation.navigate('Catalogo de receitas', item)} style={estilos.card}>
+                <TouchableOpacity onPress={() => navigation.navigate('Receita', item)} style={estilos.card}>
                     <Image style={estilos.imagem} source={{ uri: item.imagem }} />
                     <Text style={estilos.textoCard}>{item.nome}</Text>
                 </TouchableOpacity>
             )}
         />
-
     );
 }
 

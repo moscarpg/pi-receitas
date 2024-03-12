@@ -5,8 +5,6 @@ import {
     Image,
     StyleSheet,
     Text,
-    TouchableOpacity,
-    FlatList,
 } from 'react-native';
 
 import {
@@ -19,42 +17,31 @@ import {
 import { doc, getDoc } from "firebase/firestore";
 import { db } from '../../firebaseConfig';
 
-import { useFocusEffect } from '@react-navigation/native';
-
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Receita({ route, navigation }) {
     const [receita, setReceita] = useState(null)
 
     const { id } = route.params;
 
-    const recuperandoDados = async () => {
-        const docRef = doc(db, "receitas", id);
-        try {
-            const doc = await getDoc(docRef);
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            const recuperandoDados = async () => {
+                const docRef = doc(db, "receitas", id);
+                try {
+                    const doc = await getDoc(docRef);
 
-            setReceita(doc.data());
-            console.log("Cached document data:", doc.data());
-        } catch (e) {
-            console.log("Error getting cached document:", e);
-        }
-    }
+                    setReceita(doc.data());
+                    console.log("Cached document data:", doc.data());
+                } catch (e) {
+                    console.log("Error getting cached document:", e);
+                }
+            }
 
-    useFocusEffect(
-        useCallback(() => {
-            const unsubscribe = navigation.addListener('focus', () => {
-                recuperandoDados();
-            });
-            return unsubscribe;
-        })
-    )
-
-    // useEffect(() => {
-    //     const unsubscribe = navigation.addListener('focus', () => {
-    //         recuperandoDados();
-    //     });
-    //     return unsubscribe;
-    // }, [navigation])
+            recuperandoDados();
+        });
+        return unsubscribe;
+    }, [navigation])
 
     let [fontsLoaded, fontError] = useFonts({
         Montserrat_700Bold,
@@ -65,8 +52,6 @@ export default function Receita({ route, navigation }) {
     if (!fontsLoaded && !fontError) {
         return null;
     }
-
-
 
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -82,7 +67,7 @@ export default function Receita({ route, navigation }) {
                 ))}
                 <Text style={estilos.topicos}>Instruções</Text>
                 {receita?.instrucoes?.map((item, index) => (
-                    <Text style={estilos.itens} key={index}>{index + 1}.  {item}</Text>
+                    <Text style={estilos.itens} key={index}>{index+1}.  {item}</Text>
                 ))}
             </View>
         </ScrollView>

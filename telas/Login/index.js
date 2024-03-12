@@ -35,25 +35,12 @@ export default function Logar({ navigation }) {
             .then((userCredential) => {
                 // Signed in 
                 setUsuario(userCredential.user);
-                navigation.navigate('Inicial')
+                navigation.navigate('Home')
                 // ...
             })
             .catch((error) => {
                 setErro(error.message);
                 setSenha('')
-                // ..
-            });
-    }
-
-    async function cadastrar() {
-        await createUserWithEmailAndPassword(auth, email, senha)
-            .then((userCredential) => {
-                // Signed in 
-                setUsuario(userCredential.user);
-                // ...
-            })
-            .catch((error) => {
-                setErro(error.message);
                 // ..
             });
     }
@@ -80,9 +67,6 @@ export default function Logar({ navigation }) {
                     secureTextEntry={true}
                     onChangeText={(e) => setSenha(e)}
                 />
-                <TouchableOpacity style={estilos.esqueci}>
-                    <Text>Esqueci minha senha</Text>
-                </TouchableOpacity>
                 <Text>{erro}</Text>
                 <Text>{usuario.email}</Text>
                 <TouchableOpacity style={estilos.submit} onPress={logar}><Text>Entrar</Text></TouchableOpacity>

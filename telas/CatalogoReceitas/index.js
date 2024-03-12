@@ -17,34 +17,36 @@ import {
 import { collection, query, getDocs, where } from "firebase/firestore";
 import { db } from '../../firebaseConfig';
 
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
+
+import { useFocusEffect } from '@react-navigation/native';
 
 
 export default function App({ route, navigation }) {
     const [receitas, setReceitas] = useState(null)
 
-    route.params ? { nome, id } = route.params : nome = 'Todas as receitas', id = 0
+    const { nome, id } = route.params
 
-    useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            const recuperandoDados = async () => {
-                const lista = []
-                const docRef = id != 0 ? query(collection(db, "receitas"), where('curso', '==', id)) : query(collection(db, "receitas"));
-                const querySnapshot = await getDocs(docRef);
-                querySnapshot.forEach((doc) => {
-                    atual = doc.data();
-                    atual['id'] = doc.id;
-                    lista.push(atual)
-                });
-                setReceitas(lista);
-            }
-
-            recuperandoDados();
+    const recuperandoDados = async () => {
+        const lista = []
+        const docRef = query(collection(db, "receitas"), where('curso', '==', id))
+        const querySnapshot = await getDocs(docRef);
+        querySnapshot.forEach((doc) => {
+            atual = doc.data();
+            atual['id'] = doc.id;
+            lista.push(atual)
         });
+        setReceitas(lista);
+    }
 
-        // Return the function to unsubscribe from the event so it gets removed on unmount
-        return unsubscribe;
-    }, [navigation])
+    useFocusEffect(
+        useCallback(() => {
+            const unsubscribe = navigation.addListener('focus', () => {
+                recuperandoDados();
+            });
+            return unsubscribe;
+        })
+    )
 
     let [fontsLoaded, fontError] = useFonts({
         Montserrat_700Bold,
@@ -61,7 +63,7 @@ export default function App({ route, navigation }) {
             ListHeaderComponent={() => (
                 <View style={{ marginBottom: 40, }}>
                     <Text style={estilos.titulo}>{nome}</Text>
-                    {nome != 'Todas as receitas' ? <Text style={estilos.subTitulo}>Receitas deliciosas do nosso curso de {nome}</Text> : <Text style={estilos.subTitulo}>Todas as nossas deliciosas receitas</Text>}
+                    <Text style={estilos.subTitulo}>Receitas deliciosas do nosso curso de {nome}</Text>
                 </View>
             )}
             showsVerticalScrollIndicator={false}
