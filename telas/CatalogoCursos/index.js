@@ -7,9 +7,6 @@ import {
     FlatList,
 } from 'react-native';
 
-import logoMenu from '../../assets/Group 1.png';
-import pesquisa from '../../assets/Group 2.png';
-
 import {
     useFonts,
     Montserrat_900Black,
@@ -17,7 +14,7 @@ import {
     Montserrat_700Bold,
 } from '@expo-google-fonts/montserrat';
 
-import { collection, query, getDocs } from "firebase/firestore";
+import { collection, query, getDocs, orderBy } from "firebase/firestore";
 import { db } from '../../firebaseConfig';
 
 import { useState, useCallback } from 'react';
@@ -29,13 +26,14 @@ export default function App({ navigation }) {
 
     const recuperandoDados = async () => {
         const lista = []
-        const docRef = query(collection(db, "cursos"));
+        const docRef = query(collection(db, "cursos"), orderBy('nome'));
         const querySnapshot = await getDocs(docRef);
         querySnapshot.forEach((doc) => {
             atual = doc.data();
             atual['id'] = doc.id;
             lista.push(atual)
         });
+        console.log(lista)
         setCursos(lista);
     }
 
@@ -46,7 +44,7 @@ export default function App({ navigation }) {
             });
             return unsubscribe;
         })
-    )
+    );
 
     let [fontsLoaded, fontError] = useFonts({
         Montserrat_700Bold,
@@ -129,7 +127,8 @@ const estilos = StyleSheet.create({
         height: 76,
         borderRadius: 256,
         borderWidth: 1,
-        borderColor: '#005594'
+        borderColor: '#005594',
+        backgroundColor: '#fff',
     },
     textoCard: {
         maxWidth: 78,

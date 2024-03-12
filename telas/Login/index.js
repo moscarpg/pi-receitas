@@ -1,7 +1,7 @@
 import { StatusBar, View, TouchableOpacity, Text, SafeAreaView, StyleSheet, TextInput, Image, ScrollView } from 'react-native';
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
-import { getAuth } from '../../firebaseConfig';
+import { auth } from '../../firebaseConfig';
 import logo from '../../assets/logo.png';
 import {
     useFonts,
@@ -10,8 +10,6 @@ import {
     Montserrat_700Bold,
     Montserrat_500Medium,
 } from '@expo-google-fonts/montserrat';
-
-const auth = getAuth();
 
 export default function Logar({ navigation }) {
     const [email, setEmail] = useState('')
@@ -34,6 +32,7 @@ export default function Logar({ navigation }) {
         await signInWithEmailAndPassword(auth, email, senha)
             .then((userCredential) => {
                 // Signed in 
+                console.log(auth.currentUser)
                 setUsuario(userCredential.user);
                 navigation.navigate('Home')
                 // ...

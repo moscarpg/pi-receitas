@@ -14,7 +14,7 @@ import {
     Montserrat_700Bold,
 } from '@expo-google-fonts/montserrat';
 
-import { collection, query, getDocs, where } from "firebase/firestore";
+import { collection, query, getDocs } from "firebase/firestore";
 import { db } from '../../firebaseConfig';
 
 import { useState, useCallback } from 'react';
@@ -22,7 +22,7 @@ import { useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 
 
-export default function App({ route, navigation }) {
+export default function App({ navigation }) {
     const [receitas, setReceitas] = useState(null)
 
     const recuperandoDados = async () => {

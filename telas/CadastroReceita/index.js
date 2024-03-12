@@ -78,7 +78,9 @@ export default function App() {
                         nome: nome,
                         descricao: descricao,
                         curso: curso,
-                        imagem: url
+                        imagem: url,
+                        ingredientes: [],
+                        instrucoes: []
                     });
                     setNome('')
                     setDescricao('')
